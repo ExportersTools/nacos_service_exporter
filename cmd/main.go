@@ -21,8 +21,6 @@ func init() {
 }
 
 func main() {
-	//exporter.Endpoint = "http://10.4.35.12:8848"
-	//exporter.NameSpaceId = "b8293f1a-da23-4561-b6ae-920d5d662e5f"
 
 	endPointEnv := os.Getenv("endPoint")
 	if endPointEnv != "" {
