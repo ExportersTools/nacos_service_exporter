@@ -41,7 +41,7 @@ func main() {
 
 	exporter.Endpoint = endPoint
 	exporter.NameSpaceId = nameSpaceId
-	exporter.Interval = 5
+	exporter.Interval = 30
 	go exporter.ServiceListProm()
 
 	http.Handle("/metrics", promhttp.Handler())
