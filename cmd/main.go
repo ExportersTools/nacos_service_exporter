@@ -6,6 +6,7 @@ import (
 	"github.com/ExportersTools/nacos_service_exporter/v1/exporter"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
+	"os"
 )
 
 var endPoint string
@@ -23,10 +24,21 @@ func main() {
 	//exporter.Endpoint = "http://10.4.35.12:8848"
 	//exporter.NameSpaceId = "b8293f1a-da23-4561-b6ae-920d5d662e5f"
 
+	endPointEnv := os.Getenv("endPoint")
+	if endPointEnv != "" {
+		endPoint = endPointEnv
+	}
+
+	nameSpaceIdEnv := os.Getenv("nameSpaceId")
+	if nameSpaceIdEnv != "" {
+		nameSpaceId = nameSpaceIdEnv
+	}
+
 	fmt.Println("#===============================================#")
 	fmt.Println("endPoint: ", endPoint)
 	fmt.Println("nameSpaceId: ", nameSpaceId)
 	fmt.Println("#===============================================#")
+
 	exporter.Endpoint = endPoint
 	exporter.NameSpaceId = nameSpaceId
 	exporter.Interval = 5
