@@ -9,6 +9,6 @@ deps:
 	go mod vendor
 
 linux:
-	mkdir -p dist/linux/bin
+	mkdir -p dist/linux/
 
-	go build -o dist/linux/bin/nacosServiceExporter cmd/main.go
+	go build -o dist/linux/nacosServiceExporter cmd/main.go
