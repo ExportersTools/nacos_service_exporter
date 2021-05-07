@@ -10,7 +10,6 @@ NacosServiceExporter 是一个监控 nacos 注册中心服务数量的 exporter.
 
     由于在 发布的时候/主机宕机/程序迁移/等 的时候会有一定的变更, 所以在配置告警的时候需要谨慎配置,不能因为正常行为导致触发告警.
 
-
 主要采集项(metrics):
 
     服务是否正常访问Nacos: up
@@ -18,4 +17,23 @@ NacosServiceExporter 是一个监控 nacos 注册中心服务数量的 exporter.
     所有服务数量: allServiceCount
     所有服务实例数量: allServiceInstanceCount
     每个节点(主机)服务个数: endpointServiceCount
+
+StartUp
+---------
+
+### 环境变量方法
+
+```shell script
+export endPoint="127.0.0.1:8848"
+export nameSpaceId="xxx-xxx"
+./nacosServiceExporter
+```
+
+### 传参方式
+
+```shell script
+./nacosServiceExporter -endPoint 127.0.0.1:8848 -nameSpaceId xx-xx-xx
+```
+
+
 

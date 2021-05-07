@@ -1,0 +1,10 @@
+_docs
+_docs/*
+.idea*
+.idea/*
+.DS_Store
+.DS_Store/*
+_test
+_test/*
+dist
+dist/*
