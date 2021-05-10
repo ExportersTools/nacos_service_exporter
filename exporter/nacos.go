@@ -208,7 +208,13 @@ func InstanceList(serviceName string) {
 		EndpointServiceCount[h.Ip] += 1
 	}
 
-	serviceCount := len(instanceListResponse.Hosts)
+	//serviceCount := len(instanceListResponse.Hosts)
+	var serviceCount int
+	for _, hosts := range instanceListResponse.Hosts {
+		if hosts.Valid {
+			serviceCount += 1
+		}
+	}
 	setPromServiceInstanceCount(serviceName, serviceCount)
 
 	allServiceInstanceCount += serviceCount
