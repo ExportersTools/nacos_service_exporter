@@ -46,7 +46,7 @@ var (
 	},
 		[]string{"endpoint", "nameSpaceId"},
 	)
-
+	
 	// 所有服务实例数量
 	allServiceInstanceCount = 0
 	// 间隔多久收集一次数据
@@ -59,7 +59,7 @@ var (
 	Endpoint string = "http://127.0.0.1"
 	// nacos nameSpaceId
 	NameSpaceId string
-
+	
 	EndpointServiceCount = map[string]int{}
 )
 
@@ -99,9 +99,8 @@ func setPromServiceInstanceCount(serviceName string, serviceCount int) {
 }
 
 func ServiceListProm() {
-	//
 	ticker := time.NewTicker(time.Duration(Interval) * time.Second)
-
+	
 	for {
 		ServiceList()
 		fmt.Println("Now: ", time.Now().Unix())
@@ -123,42 +122,42 @@ func ServiceList() {
 	var pageNo int = 1
 	var pageSize int = 20
 	var pageCount int = 0
-
+	
 	for {
 		var serviceListResponse ServiceListResponse
 		requestUrl := Endpoint + serviceListUri + "?pageNo=" + strconv.Itoa(pageNo) + "&pageSize=" + strconv.Itoa(pageSize) + "&namespaceId=" + NameSpaceId
-
+		
 		resp, err := http.Get(requestUrl)
 		if err != nil {
 			fmt.Println("http request failed, err: ", err.Error())
 			setPromUp(0)
 			break
 		}
-
+		
 		respBody := resp.Body
 		respBodyByte, err := ioutil.ReadAll(respBody)
 		resp.Body.Close()
-
+		
 		if err != nil {
 			fmt.Println("read respBody failed, err: ", err.Error())
 			setPromUp(0)
 			break
 		}
-
+		
 		err = json.Unmarshal(respBodyByte, &serviceListResponse)
 		if err != nil {
 			fmt.Println("json unmarshal failed, err: ", err.Error())
 			setPromUp(0)
 			break
 		}
-
+		
 		setPromUp(1)
 		AllServiceCountMetric.Set(float64(serviceListResponse.Count))
-
+		
 		for _, service := range serviceListResponse.Doms {
 			InstanceList(service)
 		}
-
+		
 		pageCount += len(serviceListResponse.Doms)
 		if pageCount >= serviceListResponse.Count {
 			break
@@ -166,9 +165,9 @@ func ServiceList() {
 		pageNo += 1
 		//break
 	}
-
+	
 	AllServiceInstanceCountMetric.Set(float64(allServiceInstanceCount))
-
+	
 	for endpoint, count := range EndpointServiceCount {
 		EndpointServiceCountMetric.With(prometheus.Labels{"endpoint": endpoint, "nameSpaceId": NameSpaceId}).Set(float64(count))
 	}
@@ -178,36 +177,36 @@ func ServiceList() {
 func InstanceList(serviceName string) {
 	var instanceListResponse InstanceListResponse
 	requestUrl := Endpoint + instanceListUri + "?serviceName=" + serviceName + "&namespaceId=" + NameSpaceId
-
+	
 	resp, err := http.Get(requestUrl)
 	if err != nil {
 		fmt.Println("request service instance failed, err: ", err.Error())
 		setPromServiceInstanceCount(serviceName, 0)
 		return
 	}
-
+	
 	defer resp.Body.Close()
-
+	
 	respBody := resp.Body
-
+	
 	respBodyByte, err := ioutil.ReadAll(respBody)
 	if err != nil {
 		fmt.Println("read service instance responseBody failed, err: ", err.Error())
 		setPromServiceInstanceCount(serviceName, 0)
 		return
 	}
-
+	
 	err = json.Unmarshal(respBodyByte, &instanceListResponse)
 	if err != nil {
 		fmt.Println("json unmarshal service instance failed, err: ", err.Error())
 		setPromServiceInstanceCount(serviceName, 0)
 		return
 	}
-
+	
 	for _, h := range instanceListResponse.Hosts {
 		EndpointServiceCount[h.Ip] += 1
 	}
-
+	
 	//serviceCount := len(instanceListResponse.Hosts)
 	var serviceCount int
 	for _, hosts := range instanceListResponse.Hosts {
@@ -216,6 +215,6 @@ func InstanceList(serviceName string) {
 		}
 	}
 	setPromServiceInstanceCount(serviceName, serviceCount)
-
+	
 	allServiceInstanceCount += serviceCount
 }

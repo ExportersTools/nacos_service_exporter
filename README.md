@@ -1,10 +1,9 @@
 NacosServiceExporter
 ====================
 
-NacosServiceExporter 是一个监控 nacos 注册中心服务数量的 exporter.
+NacosServiceExporter 是一个监控 nacos 注册中心服务数量监控服务.
 
 该项目工程主要用于微服务建设初期, 监控比较薄弱时期, 后期数据微服务监控完善之后, 该组建意义不大. (K8S环境下, 基本无意义.)
-
 
 建议:
 
@@ -12,13 +11,13 @@ NacosServiceExporter 是一个监控 nacos 注册中心服务数量的 exporter.
 
 主要采集项(metrics):
 
-    服务是否正常访问Nacos: up
+    服务是否正常访问 Nacos: up
     微服务注册实例数量: serviceInstanceCount
     所有服务数量: allServiceCount
     所有服务实例数量: allServiceInstanceCount
     每个节点(主机)服务个数: endpointServiceCount
 
-StartUP
+StartUp
 ---------
 
 ### 环境变量方法
@@ -32,7 +31,7 @@ export nameSpaceId="xxx-xxx"
 ### 传参方式
 
 ```shell script
-./nacosServiceExporter -endPoint http://127.0.0.1:8848 -nameSpaceId xx-xx-xx
+./nacosServiceExporter -endPoint http://127.0.0.1:8848 -nameSpaceId xx-xx-xx-xx-xx
 ```
 
 Prometheus
@@ -50,15 +49,7 @@ scrape_configs:
         - 127.0.0.1:11111
 ```
 
-### alert rules
-
-up
-endpointServiceCount
-allServiceInstanceCount
-allServiceCount
-serviceInstanceCount
-
-
+### prometheus rule
 
 ```yaml
 groups:
@@ -102,3 +93,8 @@ groups:
       summary: "{{ $labels.instance }} 无可用实例."
       description: "{{ $labels.job }} 下实例 {{ $labels.instance }} 服务 {{ $labels.service }} 无可用实例, 请确认是否有服务下线. 当前值 {{ $value }}"
 ```
+
+author
+------
+
+qx@startops.com.cn

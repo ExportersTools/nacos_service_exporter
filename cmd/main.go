@@ -43,5 +43,7 @@ func main() {
 	go exporter.ServiceListProm()
 
 	http.Handle("/metrics", promhttp.Handler())
-	http.ListenAndServe(":11111", nil)
+	if err := http.ListenAndServe(":11111", nil); err != nil {
+		fmt.Println("Listen Service Failed, err: ", err.Error())
+	}
 }
